@@ -1,0 +1,26 @@
+# Deployment for packagemanage service
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: bugzilla-server
+spec:
+  selector:
+    matchLabels:
+      app: bugzilla
+  template:
+    metadata:
+      labels:
+        app: bugzilla
+    spec:
+      containers:
+        - name: bugzilla-server
+          image: swr.ap-southeast-1.myhuaweicloud.com/opensourceway/bugzilla
+          resources:
+            requests:
+              cpu: 2000m
+              memory: 2000Mi
+          command:
+            - a2ensite bugzilla
+            - a2enmod cgi headers expires
+            - service apache2 restart 
