@@ -19,7 +19,6 @@ RUN ./checksetup.pl;exit 0
 RUN /usr/bin/perl install-module.pl --all
 RUN ./checksetup.pl
 COPY cfg.sh /var/www/html/bugzilla
-RUN sh ./cfg.sh
  
 
 

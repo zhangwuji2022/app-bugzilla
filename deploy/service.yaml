@@ -8,4 +8,4 @@ spec:
   ports:
     - name: bugzilla-port
       port: 80
-      targetPort: 5005 
+      targetPort: 80

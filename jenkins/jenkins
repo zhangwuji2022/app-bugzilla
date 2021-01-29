@@ -1,0 +1,56 @@
+GIT_EMAIL="tommylike@gmail.com"
+GIT_VERSION="v0"
+TIME_VERSION="1"
+IMAGE_VERSION="v0.0.1"
+
+echo "Begin"
+ls
+
+if hash git 2>/dev/null; then
+    GIT_VERSION=$(git rev-parse HEAD)
+fi
+TIME_VERSION=$(date +%s)
+
+IMAGE_VERSION=$GIT_VERSION.$TIME_VERSION
+echo $IMAGE_VERSION
+
+echo "Docker ..."
+if hash docker 2>/dev/null; then
+    docker login -u ap-southeast-1@$DOCKER_USER -p $DOCKER_PASS swr.ap-southeast-1.myhuaweicloud.com
+else
+	echo "docker not installed."
+    exit
+fi
+
+echo "Building bugzilla server"
+docker build -t swr.ap-southeast-1.myhuaweicloud.com/opensourceway/bugzilla:$IMAGE_VERSION .
+docker push swr.ap-southeast-1.myhuaweicloud.com/opensourceway/bugzilla:$IMAGE_VERSION
+docker rmi swr.ap-southeast-1.myhuaweicloud.com/opensourceway/bugzilla:$IMAGE_VERSION
+
+
+if [ -d "infra-openeuler" ]; then
+    rm -rf "infra-openeuler"
+fi
+
+if hash git 2>/dev/null; then
+    git config --global user.email $GIT_EMAIL
+    git config --global user.name $GIT_USER
+    git clone https://$GIT_USER:$GIT_PASS@github.com/opensourceways/infra-openeuler
+    cd infra-openeuler/applications/bugzilla
+else
+    echo "git is not existing."
+fi
+
+if hash kustomize 2>/dev/null; then
+    kustomize edit set image swr.ap-southeast-1.myhuaweicloud.com/opensourceway/bugzilla=swr.ap-southeast-1.myhuaweicloud.com/opensourceway/bugzilla:$IMAGE_VERSION
+else
+    echo "use replace to set image."
+fi
+
+if hash git 2>/dev/null; then   
+    git add .
+    git commit -am "update image to $IMAGE_VERSION"
+    git push origin --all
+else
+    echo "git is not existing."
+fi

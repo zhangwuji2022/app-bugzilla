@@ -3,7 +3,7 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: bugzilla-server
+  name: bugzilla
 spec:
   selector:
     matchLabels:
@@ -21,6 +21,32 @@ spec:
               cpu: 2000m
               memory: 2000Mi
           command:
-            - a2ensite bugzilla
-            - a2enmod cgi headers expires
-            - service apache2 restart 
+            - /bin/bash
+            - -c
+            - |
+              sh ./cfg.sh
+              a2ensite bugzilla
+              a2enmod cgi headers expires
+              service apache2 restart
+              sleep infinity
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bugzilla-db
+                  key: bugzilla-db-user
+            - name: DB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: bugzilla-db
+                  key: bugzilla-db-pwd
+            - name: DB_ADDR
+              valueFrom:
+                secretKeyRef:
+                  name: bugzilla-db
+                  key: bugzilla-db-addr
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: bugzilla-db
+                  key: bugzilla-db-port
