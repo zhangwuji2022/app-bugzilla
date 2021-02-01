@@ -3,32 +3,32 @@ echo "Config!"
 
 line=$(grep -n 'webservergroup' localconfig | cut -d ":" -f 1)
 ch="webservergroup = 'www-data';"
-echo $line  $ch
+echo $line
 sed -i "$line"d localconfig
 sed -i ${line}i\$"$ch" localconfig
 
 line=$(grep -n 'db_host' localconfig | cut -d ":" -f 1)
 ch="db_host = '"$DB_ADDR"';"
-echo $line  $ch
+echo $line
 sed -i "$line"d localconfig
 sed -i ${line}i\$"$ch" localconfig
 
 
 line=$(grep -n 'db_user' localconfig | cut -d ":" -f 1)
 ch="db_user = '"$DB_USER"';"
-echo $line  $ch
+echo $line
 sed -i "$line"d localconfig
 sed -i ${line}i\$"$ch" localconfig
 
 line=$(grep -n 'db_pass' localconfig | cut -d ":" -f 1)
 ch="db_pass = '"$DB_PWD"';"
-echo $line  $ch
+echo $line
 sed -i "$line"d localconfig
 sed -i ${line}i\$"$ch" localconfig
 
 line=$(grep -n 'db_port' localconfig | cut -d ":" -f 1)
 ch="db_port = "$DB_PORT";"
-echo $line  $ch
+echo $line
 sed -i "$line"d localconfig
 sed -i ${line}i\$"$ch" localconfig
 
