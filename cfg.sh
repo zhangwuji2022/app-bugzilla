@@ -37,3 +37,12 @@ line=$(grep -n 'DocumentRoot' 000-default.conf | cut -d ":" -f 1)
 echo $line
 sed -i ${line}s:$:/bugzilla: 000-default.conf
 cd -
+
+cd /etc/apache2/conf-available/
+line=$(grep -n "Tokens OS" security.conf |cut -d ":" -f 1)
+echo $line
+sed -i "${line}s/OS/Prod/g" security.conf
+line=$(grep -n "ServerSignature On" security.conf |cut -d ":" -f 1)
+echo $line
+sed -i "${line}s/On/Off/g" security.conf
+cd -
