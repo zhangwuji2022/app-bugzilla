@@ -1,4 +1,8 @@
 FROM ubuntu:14.04
+# Configure mailbox service
+cpan -i MIME::Base64
+cpan -i Net::SSLeay
+cpan -i Net::SMTP::SSL
 
 RUN apt-get update
 RUN apt-get install git nano vim expect -y
